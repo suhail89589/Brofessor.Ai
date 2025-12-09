@@ -6,11 +6,12 @@ import { Calendar, FileText } from "lucide-react";
 
 export default function StudyPlanHistory() {
   const { token } = useAuth();
+  const API = import.meta.env.VITE_API_URL;
   const [plans, setPlans] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:7000/api/studyplan/my-plans", {
+      .get(`${API}/studyplan/my-plans`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setPlans(res.data.plans))

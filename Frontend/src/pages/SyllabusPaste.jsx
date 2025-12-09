@@ -9,6 +9,8 @@ export default function SyllabusPaste() {
   const { token } = useAuth();
   const navigate = useNavigate();
 
+const API = import.meta.env.VITE_API_URL;
+
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +31,7 @@ export default function SyllabusPaste() {
 
     try {
       const res = await axios.post(
-        "http://localhost:7000/api/syllabus/paste",
+        `${API}/syllabus/paste`,
         { text },
         { headers: { Authorization: `Bearer ${token}` } }
       );

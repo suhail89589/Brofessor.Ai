@@ -16,6 +16,8 @@ import { motion } from "framer-motion";
 export default function ProfilePage() {
   const { user, token, login } = useAuth();
 
+  const API = import.meta.env.VITE_API_URL;
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -46,7 +48,7 @@ export default function ProfilePage() {
 
     try {
       const res = await axios.put(
-        "http://localhost:7000/api/user/update",
+        `${API}/user/update`,
         { name, email },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -94,7 +96,7 @@ export default function ProfilePage() {
     try {
       // Adjust URL if your backend route is different
       await axios.put(
-        "http://localhost:7000/api/user/update",
+        `${API}/user/update-password`,
         { currentPassword, newPassword },
         {
           headers: { Authorization: `Bearer ${token}` },

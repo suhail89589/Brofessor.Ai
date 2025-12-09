@@ -7,7 +7,9 @@ import { motion } from "framer-motion";
 
 export default function Login() {
   const { login } = useAuth();
+
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -20,7 +22,7 @@ export default function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:7000/api/user/login",
+        `${API_BASE}/user/login`,formData,
         formData
       );
 

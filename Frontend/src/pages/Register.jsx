@@ -9,6 +9,8 @@ export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const API = import.meta.env.VITE_API_URL;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,7 +27,7 @@ export default function Register() {
 
     try {
       const res = await axios.post(
-        "http://localhost:7000/api/user/register",
+        `${API}/user/register`,
         formData
       );
 

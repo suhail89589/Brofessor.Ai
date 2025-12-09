@@ -7,6 +7,8 @@ import { Loader2, Check, Copy, FileText } from "lucide-react";
 export default function StudyPlan() {
   const { token } = useAuth();
 
+  const API = import.meta.env.VITE_API_URL;
+  
   const [selectedId, setSelectedId] = useState("");
   const [syllabusName, setSyllabusName] = useState(""); // NEW: Show name
   const [days, setDays] = useState(7);
@@ -23,7 +25,7 @@ export default function StudyPlan() {
     const fetchLatest = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:7000/api/syllabus/latest",
+          `${API}/syllabus/latest`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -53,7 +55,7 @@ export default function StudyPlan() {
 
     try {
       const res = await axios.post(
-        "http://localhost:7000/api/studyplan/generate",
+        `${API}/studyplan/generate`,
         {
           days,
           difficulty,
