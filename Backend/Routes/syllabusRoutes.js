@@ -1,6 +1,9 @@
 // src/routes/syllabusRoutes.js
 import express from "express";
-import { pasteSyllabus,getLatestSyllabus, } from "../controllers/syllabuscontroller.js";
+import {
+  pasteSyllabus,
+  getLatestSyllabus,
+} from "../controllers/syllabusController.js";
 import { authMiddleware } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -11,7 +14,5 @@ const router = express.Router();
 
 router.post("/paste", authMiddleware, pasteSyllabus);
 router.get("/latest", authMiddleware, getLatestSyllabus);
-
-
 
 export default router;

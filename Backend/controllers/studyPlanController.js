@@ -1,4 +1,4 @@
-import StudyPlan from "../Models/StudyPlanModel.js";
+import StudyPlan from "../Models/studyPlanModel.js";
 import Syllabus from "../Models/syllabusModel.js";
 import { generateAIResponse } from "../utils/aiClient.js";
 import { buildStudyPlanPrompt } from "../utils/studyPlanPrompt.js";

@@ -5,7 +5,7 @@ import {
   getUserProfile,
   updateUserProfile,
   changePassword,
-} from "../controllers/usercontroller.js";
+} from "../controllers/userController.js";
 
 import { authMiddleware } from "../Middleware/authMiddleware.js";
 
