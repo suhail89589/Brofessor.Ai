@@ -8,7 +8,7 @@ export default function StudyPlan() {
   const { token } = useAuth();
 
   const API = import.meta.env.VITE_API_URL;
-  
+
   const [selectedId, setSelectedId] = useState("");
   const [syllabusName, setSyllabusName] = useState(""); // NEW: Show name
   const [days, setDays] = useState(7);
@@ -24,10 +24,9 @@ export default function StudyPlan() {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const res = await axios.get(
-          `${API}/syllabus/latest`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await axios.get(`${API}/syllabus/latest`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const latest = res.data.syllabus;
 
