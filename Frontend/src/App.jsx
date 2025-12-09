@@ -86,16 +86,6 @@ function App() {
             }
           />
 
-          {/* Upload syllabus (optional future) */}
-          <Route
-            path="/syllabus-upload"
-            element={
-              <ProtectedRoute>
-                <SyllabusUpload />
-              </ProtectedRoute>
-            }
-          />
-
           <Route
             path="/syllabus-result"
             element={
