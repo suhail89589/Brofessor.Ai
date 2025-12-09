@@ -1,6 +1,6 @@
 // src/routes/syllabusRoutes.js
 import express from "express";
-import { pasteSyllabus,getLatestSyllabus, } from "../controllers/syllabusController.js";
+import { pasteSyllabus,getLatestSyllabus, } from "../controllers/syllabuscontroller.js";
 import { authMiddleware } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
