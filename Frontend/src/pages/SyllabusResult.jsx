@@ -134,7 +134,7 @@ export default function SyllabusResult() {
 
               {/* Return / Upload Again */}
               <button
-                onClick={() => navigate("/upload-syllabus")}
+                onClick={() => navigate("/syllabus-paste")}
                 className="w-full rounded-xl px-6 py-4 font-semibold text-slate-200
                            bg-slate-800/40 border border-white/10 hover:bg-slate-700/40
                            hover:scale-[1.02] transition-all"

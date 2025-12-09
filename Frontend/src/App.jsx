@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./Context/AuthContext";
+
 import "./App.css";
 
 // Components
@@ -15,7 +15,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Pages
 import Dashboard from "./pages/Dashboard";
 import ChatPage from "./pages/ChatPage";
-import SyllabusUpload from "./pages/SyllabusPaste";
 import SyllabusPaste from "./pages/SyllabusPaste";
 import SyllabusResult from "./pages/SyllabusResult";
 

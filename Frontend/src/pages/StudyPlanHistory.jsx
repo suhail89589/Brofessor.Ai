@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Add this
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
@@ -44,12 +45,12 @@ export default function StudyPlanHistory() {
                   </p>
                 </div>
 
-                <a
+                <Link
                   href={`/study-plan/${p._id}`}
                   className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-500"
                 >
                   View
-                </a>
+                </Link>
               </div>
             </div>
           ))}
