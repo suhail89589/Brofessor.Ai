@@ -19,7 +19,7 @@ import SyllabusUpload from "./pages/SyllabusPaste";
 import SyllabusPaste from "./pages/SyllabusPaste";
 import SyllabusResult from "./pages/SyllabusResult";
 
-import StudyPlan from "./pages/studyPlan";
+import StudyPlan from "./pages/MyStudyPlan";
 import StudyPlanHistory from "./pages/StudyPlanHistory";
 import ViewStudyPlan from "./pages/ViewStudyPlan";
 
