@@ -1,6 +1,7 @@
 # 🎓🤖 Brofessor.AI — Your Gen-Z Personalized AI Tutor  
 **Learn smarter, faster, and with humour.**  
 MVP-1 Release 🚀
+Live now - https://brofessor-ai.vercel.app/
 
 Brofessor.AI is a Gen-Z-flavored AI tutor that transforms any syllabus into  
 **smart study plans**, **context-aware chat tutoring**, and **fun explanations** —  
@@ -149,5 +150,5 @@ Your support motivates us to build Brofessor.AI into India’s most relatable AI
 ## 📬 Contact  
 **Developer:** Suhail Malik  
 GitHub: https://github.com/suhail89589  
-LinkedIn: *(add your link)*
+LinkedIn: https://www.linkedin.com/in/suhail-malik-7b5896366/
 
