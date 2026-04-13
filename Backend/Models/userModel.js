@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     email: {
       type: String,
       required: true,
@@ -17,26 +16,35 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-
     password: {
       type: String,
       required: true,
       minlength: 6,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // -----------------------------
 // HASH PASSWORD BEFORE SAVE
 // -----------------------------
 userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
+  // If password isn't modified, just exit the function
+  if (!this.isModified("password")) {
+    return; 
+  }
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    
+    // NO next() CALL HERE. 
+    // Mongoose knows we are done because the async function finishes.
+  } catch (error) {
+    // If you want to throw an error to the controller:
+    throw error; 
+  }
 });
-
 // -----------------------------
 // COMPARE PASSWORD
 // -----------------------------
@@ -48,6 +56,7 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 // SIGN JWT TOKEN
 // -----------------------------
 userSchema.methods.getSignedToken = function () {
+  // Note: This remains synchronous as jwt.sign returns a string instantly
   return jwt.sign({ id: this._id, email: this.email }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });

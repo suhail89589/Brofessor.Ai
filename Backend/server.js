@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
 import connectDB from "./config/db.js";
 
 // Routes
@@ -15,16 +12,24 @@ import studyPlanRoutes from "./Routes/studyPlanRoutes.js";
 dotenv.config();
 
 const app = express();
-app.use(express.json());
-app.use(cors());
 
-// Connect Database
+// 1. CORS CONFIGURATION (Must be at the TOP)
+app.use(
+  cors({
+    origin: "*", // Add your actual frontend URL here
+
+    
+  }),
+);
+
+// 2. PARSERS
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 3. DATABASE
 connectDB();
 
-
-
-
-// API ROUTES
+// 4. API ROUTES
 app.use("/api/user", userRoutes);
 app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);

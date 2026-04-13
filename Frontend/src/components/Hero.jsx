@@ -66,10 +66,10 @@ export default function Hero() {
             variants={fadeInUp}
             className="mb-5 text-balance text-[2.4rem] leading-tight tracking-tight sm:text-[3rem] md:text-[3.4rem] lg:text-[3.8rem] font-semibold"
           >
-            Your <span className="text-slate-200">next-Gen study partner,</span>
+            <span className="text-slate-200"></span>
             <br />
             <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
-              India&apos;s First GenZ Personal Tutor
+             "The Vertical AI 'OS' for Online Degrees
             </span>
           </motion.h1>
 

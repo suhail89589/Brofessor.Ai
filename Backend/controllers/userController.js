@@ -27,11 +27,11 @@ export const registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
       },
-      token, // ✅ FIXED — token now returned at root level
+      token, 
     });
   } catch (error) {
     console.error("Register Error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: error.message|| "Server error" });
   }
 };
 

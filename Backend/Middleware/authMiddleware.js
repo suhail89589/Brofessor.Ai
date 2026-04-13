@@ -3,7 +3,7 @@ import User from "../Models/userModel.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    // Check Authorization header
+   
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,7 +12,7 @@ export const authMiddleware = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    // Verify token
+   
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded?.id) {
       return res.status(401).json({ message: "Unauthorized: Invalid token" });
@@ -25,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
 
-    req.user = user; // attach user to request for controllers
+    req.user = user; 
 
     next();
   } catch (error) {
