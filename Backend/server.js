@@ -24,11 +24,11 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: function(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS policy"));
+        callback(null, false); // Do not throw error, simply don't set CORS headers
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -39,32 +39,8 @@ app.use(
       "Accept",
     ],
     credentials: true,
-    optionsSuccessStatus: 204,
-  }),
+  })
 );
-
-/**
- * 3. GLOBAL HEADER & PRE-FLIGHT MIDDLEWARE
- * Instead of app.options("/:path*"), we use a standard middleware.
- * This avoids the path-to-regexp parser entirely for the wildcard.
- */
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-  }
-
-  if (req.method === "OPTIONS") {
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-    );
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(204);
-  }
-  next();
-});
 
 // 4. PARSERS
 app.use(express.json());
