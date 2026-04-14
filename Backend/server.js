@@ -13,20 +13,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://brofessor-ai2.vercel.app",
-    credentials: true,
-  }),
-);
-
-// Manually handle the OPTIONS preflight just in case
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "https://brofessor-ai2.vercel.app");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.sendStatus(200);
-});
+app.use(cors());
 
 // 2. PARSERS
 app.use(express.json());
