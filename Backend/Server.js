@@ -18,8 +18,8 @@ connectDB();
 
 // 2. CORS CONFIG (FINAL CLEAN ✅)
 const allowedOrigins = [
-  "https://brofessor-ai-2.vercel.app",
-  "https://brofessor-ai2.vercel.app", // fallback just in case
+  "https://brofessor-ai-frontend.vercel.app",
+
   "http://localhost:5173",
 ];
 
