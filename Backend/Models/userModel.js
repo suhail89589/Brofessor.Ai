@@ -25,24 +25,17 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// -----------------------------
-// HASH PASSWORD BEFORE SAVE
-// -----------------------------
-userSchema.pre("save", async function () {
-  // If password isn't modified, just exit the function
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    return; 
+    return next();
   }
 
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    
-    // NO next() CALL HERE. 
-    // Mongoose knows we are done because the async function finishes.
+    next();
   } catch (error) {
-    // If you want to throw an error to the controller:
-    throw error; 
+    next(error);
   }
 });
 // -----------------------------
