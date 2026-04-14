@@ -15,6 +15,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/me", authMiddleware, getUserProfile);
 router.put("/update", authMiddleware, updateUserProfile);
-router.put("/update", authMiddleware, changePassword);
+router.put("/change-password", authMiddleware, changePassword);
 
 export default router;

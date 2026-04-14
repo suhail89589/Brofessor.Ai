@@ -91,6 +91,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <SyllabusResult />
+                
               </ProtectedRoute>
             }
           />
