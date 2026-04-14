@@ -25,10 +25,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or Postman)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS policy"));
@@ -48,19 +45,19 @@ app.use(
 
 /**
  * 3. EXPLICIT PRE-FLIGHT HANDSHAKE
- * FIXED: Uses "/*any" instead of "*" to comply with Express 5 path-to-regexp rules.
+ * FIXED: Uses "/:any*" for Express 5 compatibility
  */
-app.options("/*any", (req, res) => {
+app.options("/:any*", (req, res) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true"); // CRITICAL FOR LOGIN
   }
   res.header(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, PATCH, OPTIONS",
   );
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
   res.sendStatus(204);
 });
 
@@ -74,7 +71,7 @@ app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/studyplan", studyPlanRoutes);
 
-// Root route (Health Check)
+// Root route
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "online",
@@ -84,18 +81,14 @@ app.get("/", (req, res) => {
 
 /**
  * 6. 404 HANDLER
- * FIXED: Uses "/*path" to avoid the PathError in Express 5.
+ * FIXED: Uses "/:path*" for Express 5 compatibility
  */
-app.use("/*path", (req, res) => {
+app.use("/:path*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
 const PORT = process.env.PORT || 7000;
 
-/**
- * For Vercel, we export the app.
- * We only call app.listen if we are running locally.
- */
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
