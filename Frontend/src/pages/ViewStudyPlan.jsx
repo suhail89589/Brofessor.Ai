@@ -17,7 +17,7 @@ export default function ViewStudyPlan() {
   // Fetch Plan
   useEffect(() => {
     axios
-      .get(`${API}/studyplan/${id}`, {
+      .get(`${API}/api/studyplan/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

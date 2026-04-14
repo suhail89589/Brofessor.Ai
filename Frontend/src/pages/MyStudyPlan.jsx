@@ -24,7 +24,7 @@ export default function StudyPlan() {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const res = await axios.get(`${API}/syllabus/latest`, {
+        const res = await axios.get(`${API}/api/syllabus/latest`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

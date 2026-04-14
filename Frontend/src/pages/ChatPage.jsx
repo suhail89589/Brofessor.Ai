@@ -4,8 +4,8 @@ import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
 import { Send, Loader2 } from "lucide-react";
 
-const CHAT_API_URL = import.meta.env.VITE_API_URL + "/chat/ask";
-const SYLLABUS_API_URL = import.meta.env.VITE_API_URL + "/syllabus/latest";
+const CHAT_API_URL = import.meta.env.VITE_API_URL + "/api/chat/ask";
+const SYLLABUS_API_URL = import.meta.env.VITE_API_URL + "/api/syllabus/latest";
 
 const LOAD_MSG = "Loading your personalised tutor… ⏳🔥";
 

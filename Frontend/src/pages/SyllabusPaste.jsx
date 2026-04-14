@@ -31,7 +31,7 @@ const API = import.meta.env.VITE_API_URL;
 
     try {
       const res = await axios.post(
-        `${API}/syllabus/paste`,
+        `${API}/api/syllabus/paste`,
         { text },
         { headers: { Authorization: `Bearer ${token}` } }
       );

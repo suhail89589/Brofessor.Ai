@@ -12,7 +12,7 @@ export default function StudyPlanHistory() {
 
   useEffect(() => {
     axios
-      .get(`${API}/studyplan/my-plans`, {
+      .get(`${API}/api/studyplan/my-plans`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setPlans(res.data.plans))
