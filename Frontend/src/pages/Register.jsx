@@ -26,10 +26,9 @@ export default function Register() {
     setError("");
 
     try {
-      const res = await axios.post(
-        `${API}/user/register`,
-        formData
-      );
+      const res = await axios.post(`${API}/api/user/register`, formData, {
+        withCredentials: true, // ✅ important for cookies/auth
+      });
 
       // ✅ FIX: new backend returns token
       login(res.data.user, res.data.token);

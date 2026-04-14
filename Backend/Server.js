@@ -16,32 +16,36 @@ const app = express();
 // 1. DATABASE CONNECTION
 connectDB();
 
-// 2. CORS CONFIGURATION
+// 2. CORS CONFIG (FIXED ✅)
 const allowedOrigins = [
-  "https://brofessor-ai2.vercel.app",
+  "https://brofessor-ai-2.vercel.app", // ✅ fixed domain
   "http://localhost:5173",
 ];
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin || "https://brofessor-ai2.vercel.app";
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept");
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  
-  next();
-});
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 
-// 4. PARSERS
+// IMPORTANT: handle preflight
+app.options("*", cors());
+
+// 3. PARSERS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 5. API ROUTES
+// 4. API ROUTES (UNCHANGED)
 app.use("/api/user", userRoutes);
 app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);
@@ -55,10 +59,7 @@ app.get("/", (req, res) => {
   });
 });
 
-/**
- * 6. 404 HANDLER
- * Using a simple middleware at the end instead of a named path string.
- */
+// 5. 404 HANDLER
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
