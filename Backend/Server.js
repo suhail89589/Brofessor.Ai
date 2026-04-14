@@ -16,16 +16,16 @@ const app = express();
 // 1. DATABASE CONNECTION
 connectDB();
 
-// 2. CORS CONFIG (FIXED ✅)
+// 2. CORS CONFIG (FINAL CLEAN ✅)
 const allowedOrigins = [
-  "https://brofessor-ai-2.vercel.app", // ✅ fixed domain
+  "https://brofessor-ai-2.vercel.app",
+  "https://brofessor-ai2.vercel.app", // fallback just in case
   "http://localhost:5173",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -38,14 +38,13 @@ app.use(
   }),
 );
 
-// IMPORTANT: handle preflight
-app.options("*", cors());
+// ❌ REMOVED app.options() (it was causing crash + not needed)
 
 // 3. PARSERS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4. API ROUTES (UNCHANGED)
+// 4. API ROUTES
 app.use("/api/user", userRoutes);
 app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);
