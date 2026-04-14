@@ -16,11 +16,14 @@ const app = express();
 // 1. CORS CONFIGURATION (Must be at the TOP)
 app.use(
   cors({
-    origin: "*", // Add your actual frontend URL here
-
-    
+    origin: ["https://brofessor-ai2.vercel.app", "http://localhost:5173"], 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   }),
 );
+
+app.options("*", cors());
 
 // 2. PARSERS
 app.use(express.json());
