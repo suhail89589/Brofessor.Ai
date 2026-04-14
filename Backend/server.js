@@ -18,8 +18,8 @@ connectDB();
 
 // 2. CORS CONFIGURATION
 const allowedOrigins = [
-  "https://brofessor-ai2.vercel.app", // Your Production Frontend
-  "http://localhost:5173", // Local Vite Development
+  "https://brofessor-ai2.vercel.app",
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -44,21 +44,26 @@ app.use(
 );
 
 /**
- * 3. EXPLICIT PRE-FLIGHT HANDSHAKE
- * FIXED: Uses "/:any*" for Express 5 compatibility
+ * 3. GLOBAL HEADER & PRE-FLIGHT MIDDLEWARE
+ * Instead of app.options("/:path*"), we use a standard middleware.
+ * This avoids the path-to-regexp parser entirely for the wildcard.
  */
-app.options("/:any*", (req, res) => {
+app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true"); // CRITICAL FOR LOGIN
+    res.header("Access-Control-Allow-Credentials", "true");
   }
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-  );
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.sendStatus(204);
+
+  if (req.method === "OPTIONS") {
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+    );
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return res.sendStatus(204);
+  }
+  next();
 });
 
 // 4. PARSERS
@@ -81,9 +86,9 @@ app.get("/", (req, res) => {
 
 /**
  * 6. 404 HANDLER
- * FIXED: Uses "/:path*" for Express 5 compatibility
+ * Using a simple middleware at the end instead of a named path string.
  */
-app.use("/:path*", (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
