@@ -42,6 +42,9 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 // SIGN JWT TOKEN
 // -----------------------------
 userSchema.methods.getSignedToken = function () {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("FATAL: JWT_SECRET is not defined in environment variables!");
+  }
   // Note: This remains synchronous as jwt.sign returns a string instantly
   return jwt.sign({ id: this._id, email: this.email }, process.env.JWT_SECRET, {
     expiresIn: "7d",

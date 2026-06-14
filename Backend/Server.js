@@ -61,7 +61,23 @@ app.get("/", (req, res) => {
     message: "AI Tutor Backend Running...",
   });
 });
+const startServer = async () => {
+  try {
+    // 1. Connect to DB first and wait
+    await connectDB();
 
+    // 2. Start server only after successful DB connection
+    const PORT = process.env.PORT || 7000;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to connect to the database:", err);
+    process.exit(1); // Exit process if DB connection fails
+  }
+};
+
+startServer();
 // 5. 404 HANDLER
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
