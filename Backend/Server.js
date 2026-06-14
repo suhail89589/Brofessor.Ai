@@ -3,37 +3,25 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 
-// Routes
-import userRoutes from "./Routes/userRoutes.js";
-import syllabusRoutes from "./Routes/syllabusRoutes.js";
-import chatRoutes from "./Routes/chatRoutes.js";
-import studyPlanRoutes from "./Routes/studyPlanRoutes.js";
+// ... [Keep your imports here]
 
 dotenv.config();
-
 const app = express();
 
-// 1. DATABASE CONNECTION
-connectDB();
-
-// 2. CORS CONFIG (FINAL CLEAN ✅)
-const allowedOrigins = [
-  "https://brofessor-ai-frontend.vercel.app",
-
-  "http://localhost:5173",
-];
-
-// Add this to app.js
+// 1. CORS - MUST BE BEFORE ROUTES
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow non-browser requests (like curl, Postman, or server-to-server)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        [
+          "https://brofessor-ai-frontend.vercel.app",
+          "http://localhost:5173",
+        ].includes(origin)
+      ) {
         callback(null, true);
       } else {
-        callback(new Error("CORS Policy Violation: Origin not allowed."));
+        callback(new Error("CORS Policy Violation"));
       }
     },
     credentials: true,
@@ -42,51 +30,35 @@ app.use(
   }),
 );
 
-// ❌ REMOVED app.options() (it was causing crash + not needed)
-
-// 3. PARSERS
+// 2. PARSERS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4. API ROUTES
+// 3. ROUTES
 app.use("/api/user", userRoutes);
 app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/studyplan", studyPlanRoutes);
 
-// Root route
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "online",
-    message: "AI Tutor Backend Running...",
-  });
-});
+app.get("/", (req, res) => res.status(200).json({ status: "online" }));
+
+// 4. START SERVER (ONLY ONCE)
 const startServer = async () => {
   try {
-    // 1. Connect to DB first and wait
     await connectDB();
-
-    // 2. Start server only after successful DB connection
     const PORT = process.env.PORT || 7000;
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
-    console.error("Failed to connect to the database:", err);
-    process.exit(1); // Exit process if DB connection fails
+    console.error("Failed to connect to database:", err);
+    process.exit(1);
   }
 };
 
 startServer();
-// 5. 404 HANDLER
+
+// 5. 404 HANDLER (MUST BE LAST)
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
-});
-
-const PORT = process.env.PORT || 7000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
 
 export default app;
