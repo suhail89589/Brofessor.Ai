@@ -15,7 +15,7 @@ app.use(
       if (
         !origin ||
         [
-          "https://brofessor-ai-frontend.vercel.app",
+          "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app/",
           "http://localhost:5173",
         ].includes(origin)
       ) {
