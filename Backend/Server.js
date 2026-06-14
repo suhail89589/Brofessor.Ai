@@ -3,7 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 
-// ... [Keep your imports here]
+import userRoutes from "./Routes/userRoutes.js";
+import syllabusRoutes from "./Routes/syllabusRoutes.js";
+import chatRoutes from "./Routes/chatRoutes.js";
+import studyPlanRoutes from "./Routes/studyPlanRoutes.js";
 
 dotenv.config();
 const app = express();
