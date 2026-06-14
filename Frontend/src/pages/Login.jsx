@@ -21,7 +21,7 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await api.post("/user/login", formData);
+      const res = await api.post("/api/user/login", formData);
 
       // ✅ FIXED TOKEN PATH
       login(res.data.user, res.data.user.token);
