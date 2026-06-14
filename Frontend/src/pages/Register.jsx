@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axiosConfig.js";
 import { Sparkles, Mail, User, Lock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -26,15 +26,15 @@ export default function Register() {
     setError("");
 
     try {
-      const res = await axios.post(`${API}/api/user/register`, formData, {
-        withCredentials: true, // ✅ important for cookies/auth
+      const res = await api.post("user/register", formData, {
+        withCredentials: true,
       });
 
-      // ✅ FIX: new backend returns token
       login(res.data.user, res.data.token);
 
       navigate("/dashboard");
     } catch (err) {
+      console.error("Registration failed:", err);
       setError(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);

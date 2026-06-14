@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axiosConfig.js";
 import { Sparkles, Mail, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -21,16 +21,14 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await axios.post(
-        `${API_BASE}/user/login`,
-        formData
-      );
+      const res = await api.post("/user/login", formData);
 
       // ✅ FIXED TOKEN PATH
       login(res.data.user, res.data.user.token);
 
       navigate("/dashboard");
     } catch (err) {
+      console.error("Login Failed:", err);
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
