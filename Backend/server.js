@@ -17,6 +17,8 @@ const allowedOrigins = [
   "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app/",
   "https://brofessor-ai2.vercel.app",
   "https://brofessor-ai2.vercel.app/",
+  "https://brofessor-frontend.vercel.app",
+  "https://brofessor-frontend.vercel.app/",
   "http://localhost:5173",
   "http://localhost:5173/"
 ];
@@ -33,21 +35,40 @@ if (process.env.FRONTEND_URL) {
   });
 }
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`Blocked by CORS: ${origin}`);
-        callback(new Error("CORS Policy Violation"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  const cleanOrigin = origin.replace(/\/$/, "");
+  
+  if (cleanOrigin.startsWith("http://localhost:") || cleanOrigin === "http://localhost") {
+    return true;
+  }
+  
+  if (cleanOrigin.endsWith(".vercel.app")) {
+    return true;
+  }
+  
+  if (allowedOrigins.map(o => o.replace(/\/$/, "")).includes(cleanOrigin)) {
+    return true;
+  }
+  
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`Blocked by CORS: ${origin}`);
+      callback(null, false); // Deny origin without crashing the express request handler
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 // 2. PARSERS
 app.use(express.json());
