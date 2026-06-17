@@ -9,8 +9,6 @@ export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const API = import.meta.env.VITE_API_URL;
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",

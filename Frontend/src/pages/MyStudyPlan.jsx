@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { useAuth } from "../Context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import { Loader2, Check, Copy, FileText } from "lucide-react";
 
 export default function StudyPlan() {
   const { token } = useAuth();
-
-  const API = import.meta.env.VITE_API_URL;
 
   const [selectedId, setSelectedId] = useState("");
   const [syllabusName, setSyllabusName] = useState(""); // NEW: Show name
@@ -24,9 +22,7 @@ export default function StudyPlan() {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const res = await axios.get(`${API}/api/syllabus/latest`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get("/api/syllabus/latest");
 
         const latest = res.data.syllabus;
 
@@ -53,15 +49,12 @@ export default function StudyPlan() {
     setPlan("");
 
     try {
-      const res = await axios.post(
-        `${API}/studyplan/generate`,
+      const res = await api.post(
+        "/api/studyplan/generate",
         {
           days,
           difficulty,
           syllabusId: selectedId,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

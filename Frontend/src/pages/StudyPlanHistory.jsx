@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Add this
-import axios from "axios";
+import { Link } from "react-router-dom"; 
+import api from "../api/axiosConfig";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
 import { Calendar, FileText } from "lucide-react";
 
 export default function StudyPlanHistory() {
-  const { token } = useAuth();
-  const API = import.meta.env.VITE_API_URL;
   const [plans, setPlans] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${API}/api/studyplan/my-plans`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    api
+      .get("/api/studyplan/my-plans")
       .then((res) => setPlans(res.data.plans))
       .catch(() => {});
-  }, [token]);
+  }, []);
 
   return (
     <div className="min-h-screen flex bg-[#020617] text-white">
@@ -46,7 +42,7 @@ export default function StudyPlanHistory() {
                 </div>
 
                 <Link
-                  href={`/study-plan/${p._id}`}
+                  to={`/study-plan/${p._id}`}
                   className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-500"
                 >
                   View

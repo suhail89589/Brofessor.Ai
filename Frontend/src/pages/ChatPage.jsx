@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
 import { Send, Loader2 } from "lucide-react";
 
-const CHAT_API_URL = import.meta.env.VITE_API_URL + "/api/chat/ask";
-const SYLLABUS_API_URL = import.meta.env.VITE_API_URL + "/api/syllabus/latest";
+const CHAT_API_URL = "/api/chat/ask";
+const SYLLABUS_API_URL = "/api/syllabus/latest";
 
 const LOAD_MSG = "Loading your personalised tutor… ⏳🔥";
 
@@ -33,15 +33,13 @@ export default function ChatPage() {
   // 1. LOAD LATEST SYLLABUS
   // --------------------------------------------------
   useEffect(() => {
-    axios
-      .get(SYLLABUS_API_URL, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    api
+      .get(SYLLABUS_API_URL)
       .then((res) => {
         setSyllabus(res.data.syllabus || null);
       })
       .catch(() => setSyllabus(null));
-  }, [token]);
+  }, []);
 
   // --------------------------------------------------
   // 2. SEND AUTOMATIC WELCOME MESSAGE (FIXED)
@@ -54,14 +52,13 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         CHAT_API_URL,
         {
           question:
             "Give a short GenZ humorous welcome message based on my syllabus. Reply with only ONE message.",
           syllabusId: syllabus._id,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+        }
       );
 
       // FIX: REMOVE THE LOADING MESSAGE, THEN ADD NEW ONE
@@ -105,13 +102,12 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         CHAT_API_URL,
         {
           question: input,
           syllabusId: syllabus?._id || null,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+        }
       );
 
       setMessages((prev) => [

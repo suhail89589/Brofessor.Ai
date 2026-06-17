@@ -24,7 +24,7 @@ export default function Login() {
       const res = await api.post("/api/user/login", formData);
 
       // ✅ FIXED TOKEN PATH
-      login(res.data.user, res.data.user.token);
+      login(res.data.user, res.data.token);
 
       navigate("/dashboard");
     } catch (err) {

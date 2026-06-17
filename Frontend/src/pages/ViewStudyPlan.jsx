@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { useAuth } from "../Context/AuthContext";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -9,23 +9,20 @@ import { Loader2 } from "lucide-react";
 export default function ViewStudyPlan() {
   const { id } = useParams();
   const { token } = useAuth();
-  const API = import.meta.env.VITE_API_URL;
 
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch Plan
   useEffect(() => {
-    axios
-      .get(`${API}/api/studyplan/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    api
+      .get(`/api/studyplan/${id}`)
       .then((res) => {
         setPlan(res.data.plan);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id, token]);
+  }, [id]);
 
   // Loading Screen
   if (loading)

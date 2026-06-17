@@ -12,18 +12,34 @@ dotenv.config();
 const app = express();
 
 // 1. CORS - MUST BE BEFORE ROUTES
+const allowedOrigins = [
+  "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app",
+  "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app/",
+  "https://brofessor-ai2.vercel.app",
+  "https://brofessor-ai2.vercel.app/",
+  "http://localhost:5173",
+  "http://localhost:5173/"
+];
+
+if (process.env.FRONTEND_URL) {
+  const customOrigins = process.env.FRONTEND_URL.split(",").map(o => o.trim());
+  allowedOrigins.push(...customOrigins);
+  customOrigins.forEach(o => {
+    if (o.endsWith("/")) {
+      allowedOrigins.push(o.slice(0, -1));
+    } else {
+      allowedOrigins.push(o + "/");
+    }
+  });
+}
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        [
-          "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app/",
-          "http://localhost:5173",
-        ].includes(origin)
-      ) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`Blocked by CORS: ${origin}`);
         callback(new Error("CORS Policy Violation"));
       }
     },
@@ -49,11 +65,17 @@ app.get("/", (req, res) => res.status(200).json({ status: "online" }));
 const startServer = async () => {
   try {
     await connectDB();
-    const PORT = process.env.PORT || 7000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    if (!process.env.VERCEL) {
+      const PORT = process.env.PORT || 7000;
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    } else {
+      console.log("Running in serverless environment (Vercel). Listening skipped.");
+    }
   } catch (err) {
     console.error("Failed to connect to database:", err);
-    process.exit(1);
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 };
 

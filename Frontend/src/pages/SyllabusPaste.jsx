@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +8,6 @@ import { Loader2 } from "lucide-react";
 export default function SyllabusPaste() {
   const { token } = useAuth();
   const navigate = useNavigate();
-
-const API = import.meta.env.VITE_API_URL;
 
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,10 +28,9 @@ const API = import.meta.env.VITE_API_URL;
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${API}/api/syllabus/paste`,
-        { text },
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await api.post(
+        "/api/syllabus/paste",
+        { text }
       );
 
       navigate("/syllabus-result", {

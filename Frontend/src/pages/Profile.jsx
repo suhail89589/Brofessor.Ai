@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../Context/AuthContext";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import {
   User as UserIcon,
   Mail,
@@ -15,8 +15,6 @@ import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const { user, token, login } = useAuth();
-
-  const API = import.meta.env.VITE_API_URL;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,12 +45,9 @@ export default function ProfilePage() {
     setSavingProfile(true);
 
     try {
-      const res = await axios.put(
-        `${API}/user/update`,
-        { name, email },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const res = await api.put(
+        "/api/user/update",
+        { name, email }
       );
 
       const updatedUser = res.data?.user || { ...(user || {}), name, email };
@@ -95,12 +90,9 @@ export default function ProfilePage() {
 
     try {
       // Adjust URL if your backend route is different
-      await axios.put(
-        `${API}/user/update-password`,
-        { currentPassword, newPassword },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      await api.put(
+        "/api/user/change-password",
+        { currentPassword, newPassword }
       );
 
       setPasswordMessage({
