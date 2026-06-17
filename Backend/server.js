@@ -12,56 +12,12 @@ dotenv.config();
 const app = express();
 
 // 1. CORS - MUST BE BEFORE ROUTES
-const allowedOrigins = [
-  "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app",
-  "https://brofessor-ai-frontend-fld47d4td-mohd-suhails-projects-af24a2a9.vercel.app/",
-  "https://brofessor-ai2.vercel.app",
-  "https://brofessor-ai2.vercel.app/",
-  "https://brofessor-frontend.vercel.app",
-  "https://brofessor-frontend.vercel.app/",
-  "http://localhost:5173",
-  "http://localhost:5173/"
-];
-
-if (process.env.FRONTEND_URL) {
-  const customOrigins = process.env.FRONTEND_URL.split(",").map(o => o.trim());
-  allowedOrigins.push(...customOrigins);
-  customOrigins.forEach(o => {
-    if (o.endsWith("/")) {
-      allowedOrigins.push(o.slice(0, -1));
-    } else {
-      allowedOrigins.push(o + "/");
-    }
-  });
-}
-
-const isOriginAllowed = (origin) => {
-  if (!origin) return true;
-  const cleanOrigin = origin.replace(/\/$/, "");
-  
-  if (cleanOrigin.startsWith("http://localhost:") || cleanOrigin === "http://localhost") {
-    return true;
-  }
-  
-  if (cleanOrigin.endsWith(".vercel.app")) {
-    return true;
-  }
-  
-  if (allowedOrigins.map(o => o.replace(/\/$/, "")).includes(cleanOrigin)) {
-    return true;
-  }
-  
-  return false;
-};
-
 const corsOptions = {
   origin: (origin, callback) => {
-    if (isOriginAllowed(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`Blocked by CORS: ${origin}`);
-      callback(null, false); // Deny origin without crashing the express request handler
-    }
+    // Dynamically echo back the request origin to allow it.
+    // This allows all origins (Vercel deployments, localhost, custom domains)
+    // while fully supporting `credentials: true`.
+    callback(null, origin || true);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
