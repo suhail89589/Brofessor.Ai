@@ -9,47 +9,99 @@ import chatRoutes from "./Routes/chatRoutes.js";
 import studyPlanRoutes from "./Routes/studyPlanRoutes.js";
 
 dotenv.config();
+
 const app = express();
 
-// 1. CORS - MUST BE BEFORE ROUTES
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Dynamically echo back the request origin to allow it.
-    // This allows all origins (Vercel deployments, localhost, custom domains)
-    // while fully supporting `credentials: true`.
-    callback(null, origin || true);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+// ========================
+// CORS
+// ========================
+app.use(
+  cors({
+    origin: ["https://brofessor-frontend.vercel.app", "http://localhost:5173"],
+    credentials: true,
+  }),
+);
 
-app.use(cors(corsOptions));
+app.options(/.*/, (req, res) => {
+  console.log("OPTIONS HIT:", req.path);
 
-// 2. PARSERS
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://brofessor-frontend.vercel.app"
+  );
+
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,OPTIONS"
+  );
+
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  res.header(
+    "Access-Control-Allow-Credentials",
+    "true"
+  );
+
+  return res.sendStatus(200);
+});
+
+// ========================
+// BODY PARSERS
+// ========================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 3. ROUTES
+// ========================
+// DEBUG LOGS
+// ========================
+console.log("MOUNTING ROUTES");
+
+// ========================
+// ROUTES
+// ========================
 app.use("/api/user", userRoutes);
 app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/studyplan", studyPlanRoutes);
 
-app.get("/", (req, res) => res.status(200).json({ status: "online" }));
+console.log("ROUTES MOUNTED");
 
-// 4. START SERVER (ONLY ONCE)
+// ========================
+// HEALTH CHECK
+// ========================
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "online",
+    message: "Backend working",
+  });
+});
+
+// ========================
+// DATABASE
+// ========================
 const startServer = async () => {
   try {
+    console.log("CONNECTING DATABASE...");
+
     await connectDB();
+
+    console.log("DATABASE CONNECTED");
+
     if (!process.env.VERCEL) {
       const PORT = process.env.PORT || 7000;
-      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
     } else {
-      console.log("Running in serverless environment (Vercel). Listening skipped.");
+      console.log("Running on Vercel Serverless");
     }
-  } catch (err) {
-    console.error("Failed to connect to database:", err);
+  } catch (error) {
+    console.error("SERVER START ERROR:", error);
+
     if (!process.env.VERCEL) {
       process.exit(1);
     }
@@ -58,9 +110,13 @@ const startServer = async () => {
 
 startServer();
 
-// 5. 404 HANDLER (MUST BE LAST)
+// ========================
+// 404
+// ========================
 app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
+  res.status(404).json({
+    message: "Route not found",
+  });
 });
 
 export default app;
