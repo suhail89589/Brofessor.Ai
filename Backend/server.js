@@ -42,7 +42,22 @@ app.use(express.urlencoded({ extended: true }));
 // ========================
 // DEBUG LOGS
 // ========================
-console.log("MOUNTING ROUTES");
+// ========================
+// DATABASE MIDDLEWARE FOR SERVERLESS INVOCATIONS
+// ========================
+app.use(async (req, res, next) => {
+  // Avoid database connection checks for health check route or favicon requests
+  if (req.path === "/") {
+    return next();
+  }
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection middleware error:", error);
+    res.status(500).json({ message: "Database connection failed", error: error.message });
+  }
+});
 
 // ========================
 // ROUTES
@@ -65,35 +80,21 @@ app.get("/", (req, res) => {
 });
 
 // ========================
-// DATABASE
+// SERVER LISTEN (LOCAL RUNS ONLY)
 // ========================
-const startServer = async () => {
-  try {
-    console.log("CONNECTING DATABASE...");
-
-    await connectDB();
-
-    console.log("DATABASE CONNECTED");
-
-    if (!process.env.VERCEL) {
-      const PORT = process.env.PORT || 7000;
-
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-      });
-    } else {
-      console.log("Running on Vercel Serverless");
-    }
-  } catch (error) {
-    console.error("SERVER START ERROR:", error);
-
-    if (!process.env.VERCEL) {
-      process.exit(1);
-    }
-  }
-};
-
-startServer();
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 7000;
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  }).catch((err) => {
+    console.error("Failed to connect to database on local startup:", err);
+    process.exit(1);
+  });
+} else {
+  console.log("Running on Vercel Serverless: Database connected on request demand.");
+}
 
 // ========================
 // 404
