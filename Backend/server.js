@@ -1,3 +1,6 @@
+console.log("=== SERVER FILE LOADED ===");
+console.log("VERCEL:", process.env.VERCEL);
+console.log("NODE_ENV:", process.env.NODE_ENV);
 import "./utils/envValidation.js";
 import express from "express";
 import cors from "cors";
