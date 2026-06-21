@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 10000,
-    });
+let cachedConnection = null;
 
-    console.log(
-      `MongoDb connected succesfully: ${conn.connection.host}`
-    );
+const connectDB = async () => {
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    console.log("Using cached MongoDB connection");
+    return cachedConnection;
+  }
+
+  try {
+    console.log("Establishing new MongoDB connection...");
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+    cachedConnection = conn;
+    return conn;
   } catch (error) {
     console.error("MongoDB connection error:", error);
-    // process.exit(1); -> Removed because it crashes Vercel Serverless functions
+    throw error;
   }
 };
 

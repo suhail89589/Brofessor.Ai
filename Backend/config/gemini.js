@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 if (!process.env.GEMINI_API_KEY) {
-  console.error("❌ GEMINI_API_KEY missing in .env");
-  process.exit(1);
+  console.warn("⚠️ GEMINI_API_KEY missing in environment variables. Gemini service will be unavailable.");
 }
 
 // Initialize Gemini client

@@ -14,6 +14,22 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem("token") || null;
   });
 
+  useEffect(() => {
+    const verifyToken = async () => {
+      if (!token) return;
+      try {
+        const { default: api } = await import("../api/axiosConfig.js");
+        const res = await api.get("/api/user/me");
+        setUser(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      } catch (err) {
+        console.error("Token verification failed on startup:", err);
+        logout();
+      }
+    };
+    verifyToken();
+  }, [token]);
+
   const login = (userData, authToken) => {
     setUser(userData);
     setToken(authToken);

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://brofessor-backend.vercel.app/',
+  baseURL: import.meta.env.VITE_API_URL || 'https://pro-cafe-backend.vercel.app/',
   withCredentials: true,
 });
 
@@ -15,6 +15,22 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn("Unauthorized request detected. Clearing session state.");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      // Redirect using location api if router context isn't accessible
+      if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
+        window.location.href = "/login";
+      }
+    }
     return Promise.reject(error);
   }
 );

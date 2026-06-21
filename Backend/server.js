@@ -1,3 +1,4 @@
+import "./utils/envValidation.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -11,42 +12,26 @@ import studyPlanRoutes from "./Routes/studyPlanRoutes.js";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 
-// ========================
-// CORS
-// ========================
+const allowedOrigins = [
+  "https://pro-cafe-frontend.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(
   cors({
-    origin: ["https://brofessor-frontend.vercel.app", "http://localhost:5173"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or serverless local invocations)
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
-
-app.options(/.*/, (req, res) => {
-  console.log("OPTIONS HIT:", req.path);
-
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://brofessor-frontend.vercel.app"
-  );
-
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,OPTIONS"
-  );
-
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-
-  res.header(
-    "Access-Control-Allow-Credentials",
-    "true"
-  );
-
-  return res.sendStatus(200);
-});
 
 // ========================
 // BODY PARSERS

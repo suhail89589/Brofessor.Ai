@@ -6,6 +6,6 @@ import { authMiddleware } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/ask", authMiddleware, askLimiter, askTutor);
+router.post("/ask", authMiddleware, askTutor);
 
 export default router;
