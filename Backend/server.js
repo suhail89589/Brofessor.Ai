@@ -15,7 +15,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
-  "https://pro-cafe-frontend.vercel.app",
+  
   "http://localhost:5173"
 ];
 
