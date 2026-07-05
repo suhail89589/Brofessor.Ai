@@ -1,4 +1,5 @@
 // src/controllers/chatController.js
+import mongoose from "mongoose";
 import Syllabus from "../Models/syllabusModel.js";
 import { getRelevantChunks } from "../utils/chunkRetriever.js";
 import { buildChatPrompt } from "../utils/chatPrompt.js";
@@ -15,6 +16,10 @@ export const askTutor = async (req, res) => {
     let context = "";
 
     if (syllabusId) {
+      if (!mongoose.Types.ObjectId.isValid(syllabusId)) {
+        return res.status(400).json({ message: "Invalid syllabus ID format" });
+      }
+
       const syllabus = await Syllabus.findOne({
         _id: syllabusId,
         user: userId,
@@ -34,3 +39,4 @@ export const askTutor = async (req, res) => {
     return res.status(500).json({ message: "Chat request failed" });
   }
 };
+

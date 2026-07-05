@@ -22,7 +22,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [syllabus, setSyllabus] = useState(null);
+  const [syllabus, setSyllabus] = useState(undefined); // undefined = loading, null = no syllabus, object = syllabus found
 
   // PREVENTS DOUBLE FIRING
   const welcomeProcessed = useRef(false);
@@ -45,10 +45,23 @@ export default function ChatPage() {
   // 2. SEND AUTOMATIC WELCOME MESSAGE (FIXED)
   // --------------------------------------------------
   const autoWelcomeMessage = async () => {
-    // Stop if already ran or no syllabus
-    if (!syllabus || welcomeProcessed.current) return;
+    // Stop if already ran or still loading syllabus
+    if (syllabus === undefined || welcomeProcessed.current) return;
 
     welcomeProcessed.current = true; // LOCK IT IMMEDIATELY
+
+    // If there is no syllabus, show a default friendly welcome message and exit
+    if (syllabus === null) {
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.content !== LOAD_MSG),
+        {
+          role: "assistant",
+          content: "Yo! You haven't uploaded a syllabus yet 😅. Head to the 'Paste Syllabus' page to train me, or ask me any general questions here!",
+        },
+      ]);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -78,7 +91,7 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    if (syllabus) {
+    if (syllabus !== undefined) {
       autoWelcomeMessage();
     }
   }, [syllabus]);

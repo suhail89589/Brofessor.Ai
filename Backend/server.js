@@ -108,4 +108,11 @@ app.use((req, res) => {
   });
 });
 
+// ========================
+// ERROR HANDLER
+// ========================
+import { errorHandler } from "./Middleware/errorMiddleware.js";
+app.use(errorHandler);
+
 export default app;
+
