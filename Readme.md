@@ -1,7 +1,7 @@
-# 🎓🤖 Brofessor.AI — Your Gen-Z Personalized AI Tutor  
+# 🎓🤖 Brofessor.AI — Your Personalized AI Tutor  
 **Learn smarter, faster, and with humour.**  
 MVP-1 Release 🚀
-Live now - https://brofessor-ai.vercel.app/
+Live now - https://brofessor-ai-75zr.vercel.app/
 
 Brofessor.AI is a Gen-Z-flavored AI tutor that transforms any syllabus into  
 **smart study plans**, **context-aware chat tutoring**, and **fun explanations** —  
