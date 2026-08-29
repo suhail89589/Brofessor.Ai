@@ -3,7 +3,7 @@ export const getRelevantChunks = (question, chunks) => {
 
   const q = question.toLowerCase();
 
-  // Safely convert Mongoose documents to plain JS objects if necessary
+  
   const plainChunks = chunks.map((c) =>
     typeof c.toObject === "function" ? c.toObject() : c
   );
